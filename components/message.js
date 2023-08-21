@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 import EmojiPicker from "./emojiPicker"
+import SelectedEmojisList from "./selectedEmojiList"
 
 const Message = ({ content }) => {
 	const [selectedEmojis, setSelectedEmojis] = useState([])
@@ -11,21 +12,27 @@ const Message = ({ content }) => {
 	}
 
 	const handleEmojiSelection = (emoji) => {
-		setSelectedEmojis([...selectedEmojis, emoji])
+		if (!selectedEmojis.includes(emoji)) {
+			setSelectedEmojis([...selectedEmojis, emoji])
+		}
 		setShowEmojiPicker(false)
+	}
+
+	const handleEmojiRemoval = (emoji) => {
+		const updatedEmojis = selectedEmojis.filter(
+			(selectedEmoji) => selectedEmoji !== emoji
+		)
+		setSelectedEmojis(updatedEmojis)
 	}
 
 	return (
 		<TouchableOpacity onLongPress={handleLongPress}>
 			<View style={styles.messageContainer}>
 				<Text>{content}</Text>
-				<View style={styles.emojiContainer}>
-					{selectedEmojis.map((emoji, index) => (
-						<Text key={index} style={styles.selectedEmoji}>
-							{emoji}
-						</Text>
-					))}
-				</View>
+				<SelectedEmojisList
+					emojis={selectedEmojis}
+					onEmojiRemoval={handleEmojiRemoval}
+				/>
 			</View>
 			{showEmojiPicker && (
 				<EmojiPicker onSelectEmoji={handleEmojiSelection} />
@@ -37,14 +44,6 @@ const Message = ({ content }) => {
 const styles = StyleSheet.create({
 	messageContainer: {
 		marginVertical: 5
-	},
-	emojiContainer: {
-		flexDirection: "row",
-		flexWrap: "wrap",
-		marginTop: 5
-	},
-	selectedEmoji: {
-		marginRight: 5
 	}
 })
 

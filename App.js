@@ -33,8 +33,8 @@ const App = () => {
 						key={index}
 						content={message.content}
 						selectedEmojis={message.selectedEmojis}
-						onEmojiSelect={(emoji) =>
-							handleEmojiSelection(emoji, index)
+						onEmojiSelect={(emojis) =>
+							handleEmojiSelection(emojis, index)
 						}
 					/>
 				))}
